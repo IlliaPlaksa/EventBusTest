@@ -1,0 +1,15 @@
+syntax="proto3";
+
+import "google/protobuf/any.proto";
+
+message StringEvent {
+  string value = 1;
+}
+
+message IntEvent {
+  uint64 value = 1;
+}
+
+message Event {
+  google.protobuf.Any payload = 1;
+}

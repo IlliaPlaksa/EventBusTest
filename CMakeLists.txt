@@ -63,9 +63,14 @@ compile_proto_dir(${GENERATED_DIR} "${PROTO_SOURCES}" "${PROTO_DIR}")
 
 SET_SOURCE_FILES_PROPERTIES(${proto_generated_files} PROPERTIES GENERATED TRUE)
 
+# eventpp library
 find_package(eventpp CONFIG REQUIRED)
 set(EVENTPP_INCLUDE_DIR ${eventpp_DIR}/include)
 include_directories(${EVENTPP_INCLUDE_DIR})
+
+# Dexode::EventBus library
+include_directories(${EVENT_BUS_ROOT}/include)
+add_subdirectory(${EVENT_BUS_ROOT}/lib ${EVENT_BUS_ROOT}/lib/build)
 
 file(GLOB SRCS src/*.h src/*.cpp)
 
@@ -82,3 +87,4 @@ target_include_directories(Test
 
 target_link_libraries(Test LINK_PUBLIC ${Boost_LIBRARIES} ${Protobuf_LIBRARIES} eventpp::eventpp)
 target_link_libraries(Test PRIVATE eventpp::eventpp)
+target_link_libraries(Test PUBLIC Dexode::EventBus)

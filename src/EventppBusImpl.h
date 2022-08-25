@@ -9,10 +9,10 @@
 #include <eventpp/eventqueue.h>
 #include <thread>
 
-class EventBusImpl : public EventBus
+class EventppBusImpl : public EventBus
 {
 public:
-    EventBusImpl();
+    EventppBusImpl();
 
 public:
     void Subscribe(const std::shared_ptr<Subscriber>& subscriber) override;

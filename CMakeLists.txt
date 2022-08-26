@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(Test)
+project(Main)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -56,9 +56,6 @@ macro(compile_proto_dir generated_cpp_dir file_list base_dir)
     endforeach(proto_file)
 endmacro(compile_proto_dir)
 
-message("Generated ${GENERATED_DIR}")
-message("Proto srcs ${PROTO_SOURCES}")
-message("Proto dir ${PROTO_DIR}")
 compile_proto_dir(${GENERATED_DIR} "${PROTO_SOURCES}" "${PROTO_DIR}")
 
 SET_SOURCE_FILES_PROPERTIES(${proto_generated_files} PROPERTIES GENERATED TRUE)
@@ -72,19 +69,26 @@ include_directories(${EVENTPP_INCLUDE_DIR})
 include_directories(${EVENT_BUS_ROOT}/include)
 add_subdirectory(${EVENT_BUS_ROOT}/lib ${EVENT_BUS_ROOT}/lib/build)
 
-file(GLOB SRCS src/*.h src/*.cpp)
+file(GLOB SRCS src/include/*.h src/impl/*.cpp src/impl/*.h)
 
-add_executable(Test
+add_executable(Main
+        src/main.cpp
         ${SRCS}
         ${PROTO_SRCS} 
         ${PROTO_HDRS} 
         ${proto_generated_files})
-target_include_directories(Test 
+target_include_directories(Main 
         PUBLIC 
         ${Boost_INCLUDE_DIR}/include
         ${EVENTPP_INCLUDE_DIR}
         )
 
-target_link_libraries(Test LINK_PUBLIC ${Boost_LIBRARIES} ${Protobuf_LIBRARIES} eventpp::eventpp)
-target_link_libraries(Test PRIVATE eventpp::eventpp)
-target_link_libraries(Test PUBLIC Dexode::EventBus)
+target_include_directories(Main 
+        PRIVATE
+        src/include
+        src/impl
+        )
+
+target_link_libraries(Main LINK_PUBLIC ${Protobuf_LIBRARIES})
+target_link_libraries(Main PRIVATE eventpp::eventpp)
+target_link_libraries(Main PUBLIC Dexode::EventBus)

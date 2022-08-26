@@ -111,3 +111,26 @@ for (;;) {
     bus->processOne();
 }
 ```
+
+# Benchmark testing
+The benchmarking task was to propagate `10 000` events between `10` listeners.
+
+Sources: [`benchmarks.cpp`](benchmarks/benchmarks.cpp)
+
+Compilation mode: `Release`
+```text
+2022-08-26T18:14:50+03:00
+Running ./Benchmark
+Run on (4 X 2900 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB
+  L1 Instruction 32 KiB
+  L2 Unified 256 KiB (x2)
+  L3 Unified 3072 KiB
+Load Average: 5.26, 8.87, 9.16
+---------------------------------------------------------------
+Benchmark                     Time             CPU   Iterations
+---------------------------------------------------------------
+BM_EventppEventQueue   53219604 ns     18643429 ns           35
+BM_DexodeEventBus      52511263 ns     15023735 ns           49
+```

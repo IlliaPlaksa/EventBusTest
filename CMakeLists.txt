@@ -69,7 +69,9 @@ include_directories(${EVENTPP_INCLUDE_DIR})
 include_directories(${EVENT_BUS_ROOT}/include)
 add_subdirectory(${EVENT_BUS_ROOT}/lib ${EVENT_BUS_ROOT}/lib/build)
 
-file(GLOB SRCS src/include/*.h src/impl/*.cpp src/impl/*.h)
+file(GLOB SRCS 
+        src/include/*.h 
+        src/impl/*.cpp src/impl/*.h)
 
 add_executable(Main
         src/main.cpp
@@ -78,13 +80,8 @@ add_executable(Main
         ${PROTO_HDRS} 
         ${proto_generated_files})
 target_include_directories(Main 
-        PUBLIC 
-        ${Boost_INCLUDE_DIR}/include
+        PUBLIC
         ${EVENTPP_INCLUDE_DIR}
-        )
-
-target_include_directories(Main 
-        PRIVATE
         src/include
         src/impl
         )
@@ -92,3 +89,26 @@ target_include_directories(Main
 target_link_libraries(Main LINK_PUBLIC ${Protobuf_LIBRARIES})
 target_link_libraries(Main PRIVATE eventpp::eventpp)
 target_link_libraries(Main PUBLIC Dexode::EventBus)
+
+find_package(benchmark REQUIRED)
+
+# file(GLOB BENCHMARK_SRCS benchmarks/*.h benchmarks/*.cpp)
+add_executable(Benchmark
+        benchmarks/benchmarks.cpp
+        ${SRCS}
+        ${PROTO_SRCS}
+        ${PROTO_HDRS}
+        ${proto_generated_files}
+        )
+
+target_include_directories(Benchmark
+        PUBLIC
+        ${EVENTPP_INCLUDE_DIR}
+        src/include
+        src/impl
+        )
+
+target_link_libraries(Benchmark LINK_PUBLIC ${Protobuf_LIBRARIES})
+target_link_libraries(Benchmark PRIVATE eventpp::eventpp)
+target_link_libraries(Benchmark PUBLIC Dexode::EventBus)
+target_link_libraries(Benchmark PUBLIC benchmark::benchmark)

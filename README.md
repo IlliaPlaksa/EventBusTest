@@ -224,9 +224,8 @@ Dexode `EventBus`: `~1.04 ms`
 ## Benchmark summary
 <b>Benchmark scenrio</b>: sequential addition of events to the queue with their subsequent dispatching among subscribers
 
-###Results
-<b>Eventpp `EventQueue`</b>: Has an advantage in processing events between small number of subscribers(`1-20`)
-But when the number of subscribers increases the time of processing increases proportionately.
+<b>Eventpp `EventQueue`</b>: Has an advantage in processing events between small number of subscribers(`1-20`).
+However when the number of subscribers increases the time of processing increases proportionately.
 
 <b>Dexode `EventBus`</b>: Has a great advantage in propagating events between subscribers (seems like subscribers' callbacks are execute in parallel).
 But processing of events with low number of subscribers(`1-10`) is about twice longer then Eventpp's `EventQueue`.

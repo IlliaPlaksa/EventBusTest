@@ -113,13 +113,13 @@ for (;;) {
 ```
 
 # Benchmark testing
-The benchmarking task was to propagate `10 000` events between `10` listeners.
-
 Sources: [`benchmarks.cpp`](benchmarks/benchmarks.cpp)
 
 Compilation mode: `Release`
+
+<b>Task:</b> dispatch a `single` event to `one` subscriber
 ```text
-2022-08-26T18:14:50+03:00
+2022-08-28T14:37:43+03:00
 Running ./Benchmark
 Run on (4 X 2900 MHz CPU s)
 CPU Caches:
@@ -127,10 +127,106 @@ CPU Caches:
   L1 Instruction 32 KiB
   L2 Unified 256 KiB (x2)
   L3 Unified 3072 KiB
-Load Average: 5.26, 8.87, 9.16
+Load Average: 5.48, 6.07, 7.18
 ---------------------------------------------------------------
 Benchmark                     Time             CPU   Iterations
 ---------------------------------------------------------------
-BM_EventppEventQueue   53219604 ns     18643429 ns           35
-BM_DexodeEventBus      52511263 ns     15023735 ns           49
+BM_EventppEventQueue        556 ns          552 ns      1170275
+BM_DexodeEventBus          1197 ns         1194 ns       565647
 ```
+
+<b>Task:</b> dispatch a `1000` events to `one` subscriber
+```text
+Running ./Benchmark
+Run on (4 X 2900 MHz CPU s)
+CPU Caches:
+L1 Data 32 KiB
+L1 Instruction 32 KiB
+L2 Unified 256 KiB (x2)
+L3 Unified 3072 KiB
+Load Average: 6.86, 4.93, 5.47
+---------------------------------------------------------------
+Benchmark                     Time             CPU   Iterations
+---------------------------------------------------------------
+BM_EventppEventQueue     519188 ns       515688 ns         1257
+BM_DexodeEventBus        968409 ns       964199 ns          677
+```
+Eventpp `EventQueue`: `~0.519 ms`
+
+Dexode `EventBus`: `~0.968 ms`
+
+<b>Task:</b> dispatch a `single` events between `100` subscriber
+```text
+2022-08-28T15:20:47+03:00
+Running ./Benchmark
+Run on (4 X 2900 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB
+  L1 Instruction 32 KiB
+  L2 Unified 256 KiB (x2)
+  L3 Unified 3072 KiB
+Load Average: 7.43, 8.81, 8.40
+---------------------------------------------------------------
+Benchmark                     Time             CPU   Iterations
+---------------------------------------------------------------
+BM_EventppEventQueue       4063 ns         4049 ns       171642
+BM_DexodeEventBus          1344 ns         1340 ns       514188
+```
+Eventpp `EventQueue`: `~0.004 ms`
+
+Dexode `EventBus`: `~0.0013 ms`
+
+<b>Task:</b> dispatch a `1000` events between `100` subscriber
+```text
+2022-08-28T15:21:51+03:00
+Running ./Benchmark
+Run on (4 X 2900 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB
+  L1 Instruction 32 KiB
+  L2 Unified 256 KiB (x2)
+  L3 Unified 3072 KiB
+Load Average: 12.61, 9.62, 8.71
+---------------------------------------------------------------
+Benchmark                     Time             CPU   Iterations
+---------------------------------------------------------------
+BM_EventppEventQueue    5018500 ns      4897491 ns          116
+BM_DexodeEventBus       1320416 ns      1312960 ns          524
+```
+Eventpp `EventQueue`: `~5.01 ms` 
+
+Dexode `EventBus`: `~1.32 ms`
+
+<b>Task:</b> dispatch a `1000` events between `20` subscriber
+
+_<b>Note:</b> The most possible scenario in real usage_
+```text
+2022-08-28T16:51:25+03:00
+Running ./Benchmark
+Run on (4 X 2900 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB
+  L1 Instruction 32 KiB
+  L2 Unified 256 KiB (x2)
+  L3 Unified 3072 KiB
+Load Average: 9.78, 7.84, 6.18
+---------------------------------------------------------------
+Benchmark                     Time             CPU   Iterations
+---------------------------------------------------------------
+BM_EventppEventQueue    1220383 ns      1208945 ns          560
+BM_DexodeEventBus       1047737 ns      1024182 ns          686
+```
+
+Eventpp `EventQueue`: `~1.22 ms`
+
+Dexode `EventBus`: `~1.04 ms`
+
+## Benchmark summary
+<b>Benchmark scenrio</b>: sequential addition of events to the queue with their subsequent dispatching among subscribers
+
+###Results
+<b>Eventpp `EventQueue`</b>: Has an advantage in processing events between small number of subscribers(`1-20`)
+But when the number of subscribers increases the time of processing increases proportionately.
+
+<b>Dexode `EventBus`</b>: Has a great advantage in propagating events between subscribers (seems like subscribers' callbacks are execute in parallel).
+But processing of events with low number of subscribers(`1-10`) is about twice longer then Eventpp's `EventQueue`.

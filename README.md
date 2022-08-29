@@ -48,7 +48,7 @@ queue.process();
 ```
 
 ### `dexode::EventBus`
-**Source code: https://github.com/wqking/eventpp**
+**Source code: https://github.com/gelldur/EventBus**
 
 **C++ version:** `C++17`
 

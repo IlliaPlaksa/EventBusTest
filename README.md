@@ -46,8 +46,6 @@ queue.enqueue("SessionLoggedOut", session_logged_out);
 // Process the event queue, dispatch all queued events.
 queue.process();
 ```
-### Note
-
 
 ### `dexode::EventBus`
 **Source code: https://github.com/wqking/eventpp**
